@@ -178,6 +178,76 @@ JNZ loop
 
 ```
 
+----
+
+## Mini project questions
+
+1. Store the data byte 32H into memory location 4000H
+
+```asm
+MVI A, 32H
+STA 4000H
+```
+
+----
+
+2. Write program to shift an eight bit data four bits right. Data is in register C
+
+```asm
+MVI C, 1111B
+MOV A, C
+RAR
+RAR
+RAR
+RAR
+```
+
+----
+
+3. Add the contents of memory locations 4000H and 4001H and place the result in memory location 4002H
+
+```asm
+LDA 4000H
+MOV B, A
+LDA 4001H
+ADD B
+STA 4002H
+```
+
+----
+
+4. Find the square of the given numbers from memory location 6800H and store the result
+from memory location 8000H
+
+```asm
+MVI A, 4
+MOV B, A
+MOV C, A
+MVI A, 0
+mul: MOV A, D
+ADD B
+MOV D, A
+DCR C
+MOV A, C
+JNZ mul
+```
+
+----
+
+5. Search the given byte in the list of 50 numbers stored in the consecutive memory locations
+and store the address of memory location in the memory locations 2800H and 2801H. Assume
+byte is in the C register and starting address of the list is 2500H. If byte is not found store 00 at
+2800H and 2801H
+
+```asm
+
+----
+
+```
+
+
+
+
 
 
 
