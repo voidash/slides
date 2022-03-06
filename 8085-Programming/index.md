@@ -230,6 +230,7 @@ MOV D, A
 DCR C
 MOV A, C
 JNZ mul
+hlt
 ```
 
 ----
@@ -240,12 +241,69 @@ byte is in the C register and starting address of the list is 2500H. If byte is 
 2800H and 2801H
 
 ```asm
+LXI D, 0000H ; assume number is stored from 0000H to 0032H
+MVI C, 02H; assume number to search is 02H
+MVI B, 50 ;50 memory location so B is our counter
+; when B reaches 0 we go to notfound lable at bottom
+find: 
+MOV B, A ; move contents of counter to A
+JZ notfound ; if counter is 0 then go to notfound
+LDAX D ; load content on address that is hold by D register
+CMP C ; compare with C
+INX D ; increment D
+DCR B ; decrease counter
+JNZ find ; if Zero flag is not enable then number is notfound so go to top loop
+MOV D, H ; move D to H
+MOV E, L ; move E to L
+SHLD 2800H; store contents of H and L on 2800H and 2801H
+notfound: nop
+hlt
+```
 
 ----
 
+6. Write an assembly language program to separate even numbers from the given list of 50
+numbers and store them in the another list starting from 2200H. Assume starting address of 50
+number list is 2100H.
+
+```asm
+LXI H, 2200H ; place to store even numbers
+; B will store the number 
+; our array starts from 2100H and ends at 2132H
+; since 32 in hexadecimal is 50 in decimal
+LXI D, 2100H; our array starts from 2100H
+
+; to find even number AND with 01
+mainloop: LDAX D
+ANI 01; Accumulator AND 01
+INX D
+MOV B, A
+MOV A, E ; move E to A as its a counter
+CPI 32H ; if counter is 50 or 32H Zero flag will be enabled
+JZ endprogram ; jump if zero flag is enabled
+JNZ mainloop
+JZ store
+
+
+store: MOV A, H ; perform swap 
+MOV H, D
+MOV D, A
+MOV A, L
+MOV L , E
+MOV E, A ; swap finished 
+MOV A, B 
+STAX D
+INX D
+MOV A, H ; swap
+MOV H, D
+MOV D,A
+MOV A,L
+MOV L, E
+MOV E,A ; swap finished
+jmp mainloop
+
+endprogram:hlt
 ```
-
-
 
 
 
