@@ -10,25 +10,62 @@ paginate: true
 
 Ashish Thapa
 github.com/voidash
-
------
-# Setting Up
-
-- QString  , QList, QMap
-- Multithreading
-		- QThread
-		- QSemaphore
-		- QMutex
-- How to import external libraries
-- SQL basics
-- Adding Resources
-
-- gather HTTP resources using QT
-- Parsing JSON with nlohman json
-- Accessing file using QT
-- Different approach to Build GUI apps in QT
+twitter.com/voidash_
+at54021319@student.com.np
 
 ----- 
+<style scoped>
+details {
+	font-size: 15px;
+}
+pre {
+line-height:0.5;
+}
+</style>
+### Download Code for the workshop here 
+
+# [programs.zip](./programs.zip)
+
+<details>
+<summary>Click to view zip file tree</summary>
+<pre>
+
+├── EssentialConcepts
+│   ├── complex_num.cpp
+│   ├── lambda.cpp
+│   ├── macros.cpp
+│   ├── observerModel.cpp
+│   └── pointer_good_example.cpp
+├── QMake
+│   └── QMake.pro
+├── QTcreator
+│   ├── DifferentLayouts
+│   ├── QtMiscUtils
+│   └── RoutineManagement
+└── QTHelloWorld
+    ├── main.cpp
+    └── QTHelloWorld.pro
+</pre>
+</details>
+
+-----
+
+### Programs going to be discussed 
+
+<style scoped>
+	* {
+			font-size: 15px;
+}
+</style>
+||||
+|----|-----|----|
+Essential Concepts|<img src="assets/qmake_project.png" width=300/> |showcases small programs related pointers, lambda functions, macros , observer Design pattern|
+Basic Layouts| <img src="assets/DifferentLayout.png" width=200/>|shows how procedural QT works by creating different layouts|
+QT Console App| <img src="assets/consoleQt.png" width=300/>|shows use of core classes such asQString, QList, QRegExp works |
+Routine Management System| <img src="assets/routineManagementSystem.png" width=200/>| interface with database by fetching data into table and performing CRUD operations on table|
+QMake Basics| <img src="assets/qmake_project.png" width=300/>|Shows basic use of QMake|
+
+-----
 # Setting up Qt and QtCreator
 
 - Ensure you have C++ compiler (MSVC/mingw/clang)
@@ -86,7 +123,7 @@ TEMPLATE = app  #might be lib, plugin
 TARGET = QTHelloWorld #final output
 INCLUDEPATH += . #include whatever is in this current folder
 QT += widgets
-# += *= -=  
+ # += *= -=  
 SOURCES += main.cpp
 ```
 
@@ -214,10 +251,6 @@ std::cout << ui->lineEdit->text().toStdString() << std::endl;
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/-f8N4FEQWyY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-----
-# Misc Qt Utils 
-
-- QtString
 ----
 
 # SQL Commands 
@@ -349,11 +382,72 @@ qDebug() << "Number of rows affected: " << update_statement.numRowsAffected();
 ```
 
 ----
-# Understanding Qmake in depth
+<style scoped>
+blockquote {
+	font-size: 10px;
+}
+pre {
+	font-size: 10px;
+}
 
-- to switch databases
+ul {
+	font-size: 15px;
+}
+</style>
+# QT Core C++ Classes  (QString, QRegExp , QMap)
 
+> Note: if qDebug is not working then 
+> Qt creator > Tools > Options > Kits, select your kit, find Environment, click change and add `QT_ASSUME_STDERR_HAS_CONSOLE=1`
+
+- QString : integrates with Qt well than std::string
+```c++
+   QString name("Ashish Thapa");
+
+   // std::cout << name << std::endl; error. You have to use qDebug 
+   // to convert into std::string
+   std::string standardName = name.toStdString();
+   std::cout << standardName << std::endl;
+   // QString formatting
+   auto entry = QString("Best entryFragger: %1 ,Best Sentinel: %2, Best agent: %3").arg("Raze","Astra","Jett");
+   
+   qDebug() << entry;
+```
+- QRegExp: Regular expression in Qt 
+
+```c++
+#include <QRegExp>
+// Basic QString Validator, checks whether the string is in hh:mm:ss
+QRegExp rg(R"(^([0-1]?\d|2[0-3])(?::([0-5]?\d))?(?::([0-5]?\d))?$)");
+qDebug() << "22:23:33 " <<  rg.exactMatch("22:23:33");
+qDebug() << "42:23:33" << rg.exactMatch("42:23:33");
+qDebug() << "23" << rg.exactMatch("23");
+```
+
+- QMap
+```c++
+    QMap<QString, int> map;
+    map["one"] = 1;
+    map["three"] = 3;
+    map["seven"] = 7;
+```
 
 ----
+# Understanding Qmake in depth
+![qmake](assets/qmake.png)
+
+<p>
+The qmake tool helps simplify the build process for development projects across different platforms. It automates the generation of Makefiles so that only a few lines of information are needed to create each Makefile. You can use qmake for any software project, whether it is written with Qt or not.
+
+qmake generates a Makefile based on the information in a project file. Project files are created by the developer, and are usually simple, but more sophisticated project files can be created for complex projects.
+</p>
+
+----
+# Resources
+
 - [Awemsome QT](https://github.com/JesseTG/awesome-qt)
+- [inqlude](https://inqlude.org/) : libraries for Qt Toolkit. it has its own client to install libraries
+- Download books from [z-lib.org](https://z-lib.org/)
+	- [Learn Qt 5 Build modern, responsive cross-platform desktop applications with Qt, C++, and QML (Nicholas Sherriff (Nick))]()
+	- [Application Development with QT Creator]()
+
 

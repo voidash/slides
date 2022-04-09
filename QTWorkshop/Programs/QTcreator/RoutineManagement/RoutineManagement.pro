@@ -1,5 +1,10 @@
 QT       += core gui sql
 
+!exists(password.h) {
+   		message("create a password.h file with  define PASSWORD yourMySqlPW macro")
+      error("no password file found")
+}
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
