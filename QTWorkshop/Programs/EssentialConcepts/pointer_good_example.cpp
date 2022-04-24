@@ -1,5 +1,5 @@
 //bin/true; g++ -o "/tmp/$0.bin" "$0" && "/tmp/$0.bin" "$@"; exit $?
-#include <cstdint>
+
 #include <iostream>
 
 void increment_through_reference(int &c) {
@@ -13,6 +13,7 @@ void increment_through_pointers(int *c) {
 }
 
 int main() {
+	// type lvalue = rvalue
 	int a = 12;
 	int *pointerToA = &a; 
 
@@ -28,7 +29,7 @@ int main() {
 
 
 	// finding the size of array without using sizeOf operator 
-  int array[] = {1,2,3,4,5};
+  int array[] = {12,13,14};
 
 		
 	std::cout << array << std::endl;
