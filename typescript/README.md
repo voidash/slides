@@ -1,0 +1,2 @@
+- add //@ts-check
+- 
