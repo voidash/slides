@@ -56,7 +56,7 @@ class TodoListManager {
   completeTodoItem(id: number) {
     this.todoList = this.todoList.map((todoItem) => {
       if (todoItem.id === id) {
-        todoItem.completed = true;
+        todoItem.completed = !todoItem.completed;
       }
       return todoItem;
     });
@@ -74,7 +74,7 @@ function renderDom(listManager: TodoListManager) {
  
   parent.innerHTML = "";
 
-  let toRender = listManager.getAllTodoItems().map((todo) => {
+  let toRender = listManager.getAllTodoItems().map((todo,index) => {
 
     let card = document.createElement("div");
     card.setAttribute("id", "todo-card");
@@ -83,6 +83,12 @@ function renderDom(listManager: TodoListManager) {
     description.appendChild(document.createTextNode(todo.text));
     if (todo.completed) {
       description.style.textDecoration = "line-through";
+    }
+
+    if (todo.completed && index <= 3) {
+      fetch(`http://127.0.0.1:3000/light${index+1}/1`);
+    }else if(index <= 3){
+      fetch(`http://127.0.0.1:3000/light${index+1}/0`);
     }
 
     let deleteButton = document.createElement("button");
@@ -94,7 +100,7 @@ function renderDom(listManager: TodoListManager) {
     let completeButton = document.createElement("button");
     completeButton.appendChild(document.createTextNode("completed?"));
     completeButton.addEventListener("click", (_) => {
-      listManager.completeTodoItem(todo.id);
+        listManager.completeTodoItem(todo.id);
     });
 
     card.appendChild(description);

@@ -36,7 +36,7 @@ var TodoListManager = /** @class */ (function () {
     TodoListManager.prototype.completeTodoItem = function (id) {
         this.todoList = this.todoList.map(function (todoItem) {
             if (todoItem.id === id) {
-                todoItem.completed = true;
+                todoItem.completed = !todoItem.completed;
             }
             return todoItem;
         });
@@ -51,13 +51,19 @@ var TodoListManager = /** @class */ (function () {
 function renderDom(listManager) {
     var parent = document.querySelector("#todo-cards");
     parent.innerHTML = "";
-    var toRender = listManager.getAllTodoItems().map(function (todo) {
+    var toRender = listManager.getAllTodoItems().map(function (todo, index) {
         var card = document.createElement("div");
         card.setAttribute("id", "todo-card");
         var description = document.createElement("span");
         description.appendChild(document.createTextNode(todo.text));
         if (todo.completed) {
             description.style.textDecoration = "line-through";
+        }
+        if (todo.completed && index <= 3) {
+            fetch("http://127.0.0.1:3000/light".concat(index + 1, "/1"));
+        }
+        else if (index <= 3) {
+            fetch("http://127.0.0.1:3000/light".concat(index + 1, "/0"));
         }
         var deleteButton = document.createElement("button");
         deleteButton.appendChild(document.createTextNode("delete"));
