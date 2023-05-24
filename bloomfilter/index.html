@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Bloom Filter implementation</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jshashes/1.0.8/hashes.min.js"></script>
+  <style>
+    .array {
+      display: flex;
+    }
+    .array .element {
+      width: 50px;
+      height: 50px;
+      border: 1px solid black;
+      text-align: center;
+    }
+    #search {
+      border: 1px solid black;
+      margin: 10px;
+    }
+    #Test {
+      border: 1px solid black;
+      margin: 10px;
+    }
+  </style>
+  <body>
+    Bloom Filter
+
+    <div id="search">
+      <h1>Add element to bloom filter here</h1>
+      <input type="text" class="addString" placeholder="insert your strings" />
+      <button class="submitAdd">Submit</button>
+      <div class="amurmur">Murmur:</div>
+      <div class="afnv">Fnv:</div>
+      <div class="addedStrings"></div>
+    </div>
+
+    <h1>Your Array</h1>
+    <div class="array">
+      <div class="element">1</div>
+    </div>
+
+    <div id="Test">
+      <h1>Test Elements here</h1>
+      <input
+        type="text"
+        class="testString"
+        placeholder="insert string to test"
+      />
+      <button class="submitTest">Submit</button>
+      <div class="murmur">Murmur:</div>
+      <div class="fnv">Fnv:</div>
+      <div class="output">Output:</div>
+    </div>
+  </body>
+  <script>
+    //via https://gist.github.com/588423
+    //thanks github.com/raycmorgan!
+    function murmur(str, seed) {
+      var m = 0x5bd1e995;
+      var r = 24;
+      var h = seed ^ str.length;
+      var length = str.length;
+      var currentIndex = 0;
+
+      while (length >= 4) {
+        var k = UInt32(str, currentIndex);
+
+        k = Umul32(k, m);
+        k ^= k >>> r;
+        k = Umul32(k, m);
+
+        h = Umul32(h, m);
+        h ^= k;
+
+        currentIndex += 4;
+        length -= 4;
+      }
+
+      switch (length) {
+        case 3:
+          h ^= UInt16(str, currentIndex);
+          h ^= str.charCodeAt(currentIndex + 2) << 16;
+          h = Umul32(h, m);
+          break;
+
+        case 2:
+          h ^= UInt16(str, currentIndex);
+          h = Umul32(h, m);
+          break;
+
+        case 1:
+          h ^= str.charCodeAt(currentIndex);
+          h = Umul32(h, m);
+          break;
+      }
+
+      h ^= h >>> 13;
+      h = Umul32(h, m);
+      h ^= h >>> 15;
+
+      return h >>> 0;
+    }
+
+    function UInt32(str, pos) {
+      return (
+        str.charCodeAt(pos++) +
+        (str.charCodeAt(pos++) << 8) +
+        (str.charCodeAt(pos++) << 16) +
+        (str.charCodeAt(pos) << 24)
+      );
+    }
+
+    function UInt16(str, pos) {
+      return str.charCodeAt(pos++) + (str.charCodeAt(pos++) << 8);
+    }
+
+    function Umul32(n, m) {
+      n = n | 0;
+      m = m | 0;
+      var nlo = n & 0xffff;
+      var nhi = n >>> 16;
+      var res = (nlo * m + (((nhi * m) & 0xffff) << 16)) | 0;
+      return res;
+    }
+
+    function getBucket(str, buckets) {
+      var hash = murmur(str, str.length);
+      var bucket = hash % buckets;
+      return bucket;
+    }
+
+    function stringToBytes(str) {
+      var ch,
+        st,
+        re = [];
+      for (var i = 0; i < str.length; i++) {
+        ch = str.charCodeAt(i); // get char
+        st = []; // set up "stack"
+        do {
+          st.push(ch & 0xff); // push byte to stack
+          ch = ch >> 8; // shift value down by 1 byte
+        } while (ch);
+        // add stack contents to result
+        // done because chars have "wrong" endianness
+        re = re.concat(st.reverse());
+      }
+      // return an array of bytes
+      return re;
+    }
+
+    var FNVPRIME = 0x01000193;
+    var FNVINIT = 0x811c9dc5;
+
+    function fnv1s(str) {
+      var bytes = stringToBytes(str);
+      var hash = FNVINIT;
+      for (var i = 0; i < bytes.length; i++) {
+        hash *= FNVPRIME;
+        hash ^= bytes[i];
+      }
+      return Math.abs(hash);
+    }
+
+    function bloomFilter() {
+      let array = new Array(10).fill(0);
+      makeArray(array);
+
+      let strings = [];
+      document.querySelector(".addedStrings").innerHTML =
+        "Your Strings: " + strings.join();
+
+      document.querySelector(".submitAdd").addEventListener("click", () => {
+        let string = document.querySelector(".addString").value;
+        console.log(string);
+        let m1 = murmur(string) % 10;
+        document.querySelector(".amurmur").innerHTML = "Murmur " + m1;
+        let m2 = fnv1s(string) % 10;
+        document.querySelector(".afnv").innerHTML = "fnv " + m2;
+        array[m1] = 1;
+        array[m2] = 1;
+        makeArray(array);
+
+        strings.push(string);
+        console.log(strings);
+        document.querySelector(".addedStrings").innerHTML =
+          "Your Strings: " + strings.join();
+      });
+      document.querySelector(".submitTest").addEventListener("click", () => {
+        let string = document.querySelector(".testString").value;
+        let m1 = murmur(string) % 10;
+        document.querySelector(".murmur").innerHTML = "Murmur " + m1;
+        let m2 = fnv1s(string) % 10;
+        document.querySelector(".fnv").innerHTML = "fnv " + m2;
+        if (array[m1] != 0 && array[m2] != 0) {
+          document.querySelector(".output").innerHTML = "Output: May contain";
+        } else {
+          document.querySelector(".output").innerHTML = "Output: No";
+        }
+      });
+      let inserter = document.querySelector(".addString");
+    }
+    function makeArray(elements) {
+      let array = document.querySelector(".array");
+      let domElement = elements.map((el) => {
+        return `<div class="element">${el}</div>`;
+      });
+      array.innerHTML = domElement.join("");
+    }
+    bloomFilter();
+  </script>
+</html>
