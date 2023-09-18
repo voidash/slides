@@ -1,24 +1,29 @@
 ---
 paginate: true
+marp: true
+math: mathjax
 ---
 
 # Arduino And Javascript 
 
-Ashish Thapa and Jackie Lhowa
+-----
+
+## WhoAmI
+
+github.com/voidash
 
 
 -----
-
-# Arduino 
+ # Arduino 
 
 - A company in Italy 
 - Arduino is a physical programmable circuit board (microcontoller)
 - Arduino is also IDE
 
 ----
+
 # Agenda
 
-- 
 
 ----
 # Without Arduino Ecosystem
@@ -132,6 +137,136 @@ ul {
 |![width:300px](./assets/PowerPins.png)|<div><ul><li>IOREF: Ioreference</li><li>RESET: Provide 5V to reset the board</li><li>3.3V: 3.3V output for sensors</li><li>5V: 5V output for sensors</li><li>GND: Ground Pin</li><li>VIN: Provide 5V to power the Arduino Uno Board </li></ul></div>|
 
 ----
+
+# Basics of Electronics
+
+
+* Ohm's law $V = IR$
+
+| | |
+|--------------- | --------------- |
+| ![width:150px](assets/2023-09-18-12-55-41.png) | ![width:150px](assets/2023-09-18-12-56-23.png)|
+
+* Voltage : Electric Pressure
+* Current : Flow of electrons
+* Resistance : Measure of opposition of current flow 
+
+----
+
+# Resistor
+<center>
+  <img src="assets/2023-09-18-13-09-02.png"/>
+</center>
+
+![](assets/2023-09-18-13-09-54.png)
+
+----
+
+# Exercise 
+|||
+|-------------- | -------------- 
+|![width:500px](assets/2023-09-18-13-11-31.png)|![width:300px](assets/2023-09-18-13-12-59.png) |
+
+----
+
+# Breadboard
+
+* For Electronics Prototyping
+
+| Outside   | Inside    |
+|--------------- | --------------- |
+| ![](assets/2023-09-18-13-15-55.png) | ![](assets/2023-09-18-13-15-31.png)|
+
+----
+
+# Breadboard Continued
+
+![](assets/2023-09-18-13-53-36.png)
+
+----
+
+# Breadboard Continued
+
+| Column1   | Column2    |
+|--------------- | --------------- |
+| ![](assets/2023-09-18-13-50-09.png)| ![width:500](assets/2023-09-18-13-51-22.png)|
+
+
+----
+
+# LED (Light Emitting Diode)
+
+https://www.toppr.com/bytes/principles-of-led/
+
+* Active Semiconductor Device
+
+| Column1  | Column2   | Column3   |
+|-------------- | -------------- | -------------- |
+| ![](assets/2023-09-18-14-02-01.png) |![](assets/2023-09-18-14-02-08.png)| ![width:200px](assets/2023-09-18-14-02-50.png) |
+
+----
+
+# LED
+
+![width:600px](assets/2023-09-18-14-04-43.png)
+
+----
+
+# Series and Parallel Resistance
+![](assets/2023-09-18-13-04-57.png)
+
+- Series Resistance $R_{eq} = R1 + R2 + R3 + R4$
+
+- Parallel Resistance $\frac{1}{R_{eq}} = \frac{1}{R1}+ \frac{1}{R2}+ \frac{1}{R3}+ \frac{1}{R4}$
+
+----
+
+# Lets Build A Circuit
+
+#### Series Resistance
+
+https://wokwi.com/projects/376191541801099265
+
+![](assets/2023-09-18-13-30-32.png) 
+
+* Was there decrement in LED Glow?
+
+----
+
+## Breadboard Path 
+
+![](assets/2023-09-18-13-42-05.png) 
+
+----
+
+## Common Mistakes
+
+| | | |
+|-------------- | -------------- | -------------- |
+|![](assets/2023-09-18-13-39-26.png)| ![](assets/2023-09-18-13-45-25.png)|![](assets/2023-09-18-13-57-28.png)      |
+
+
+
+
+----
+
+
+
+# Lets Build A Circuit
+
+#### Parallel Resitance 
+
+https://wokwi.com/projects/376191892088461313
+
+![](assets/2023-09-18-13-34-31.png)
+
+* Was there increment in LED Glow?
+
+----
+
+
+
+
 
 # Installing Arduino IDE
 
