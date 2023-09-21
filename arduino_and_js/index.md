@@ -5,20 +5,41 @@ math: mathjax
 ---
 
 # Arduino And Javascript 
+![bg left](assets/2023-09-20-15-45-52.png)
+<a href="https://github.com/voidash">Click to ⭐ the Project</a>
+<style scoped>
+  button {
+    font-size: 30px;
+  }
+  a {
+    padding: 20px;
+    border: 1px solid black;
+    border-radius:25px;
+    text-decoration: none;
+    transition:background ease 0.1s;
+  }
+  a:hover {
+    background: blue;
+    color: white;
+  }
+</style>
 
 -----
 
 ## WhoAmI
 
-github.com/voidash
+![bg right](assets/2023-09-20-15-53-51.png)
 
+[voidash](github.com/voidash)
+github.com/sudhansu
 
 -----
  # Arduino 
 
 - A company in Italy 
-- Arduino is a physical programmable circuit board (microcontoller)
-- Arduino is also IDE
+- Arduino is referred to physical programmable circuit board (microcontoller)
+- ArduinoIDE 
+
 
 ----
 
@@ -171,7 +192,7 @@ ul {
 
 # Breadboard
 
-* For Electronics Prototyping
+- For Electronics Prototyping
 
 | Outside   | Inside    |
 |--------------- | --------------- |
@@ -208,7 +229,7 @@ https://www.toppr.com/bytes/principles-of-led/
 
 # LED
 
-![width:600px](assets/2023-09-18-14-04-43.png)
+![width:800px](assets/2023-09-18-14-04-43.png)
 
 ----
 
@@ -264,8 +285,34 @@ https://wokwi.com/projects/376191892088461313
 
 ----
 
+# Potentiometer : Variabe Resitor
+
+* $R = \rho\frac{L}{A}$
 
 
+![](assets/2023-09-18-18-13-26.png)
+
+----
+
+# Build a circuit 
+
+* Potentiometer
+https://wokwi.com/projects/376209822976702465
+
+![](assets/2023-09-18-18-18-59.png)
+
+
+----
+
+## Potentiometer Video
+
+
+<video controls="controls" width="600" src="./assets/pot.mp4">
+  Your browser doesn't support video tag
+</video>
+
+
+----
 
 
 # Installing Arduino IDE
@@ -361,9 +408,242 @@ void loop() {
 
 -----
 
-# Javascript and Arduino
+# Firmata 
 
-- About Javascript here
+- Protocol for communicating with microcontrollers from software on a computer.
+- All you need is to implement the protocol then any microcontroller can be supported.
+
+### To Upload Firmata
+
+- connect the arduino to pc using USB cable
+- open the arduino ide, select file>examples>firmata>StandardFirmata
+- select port
+- click upload
 
 
+-----
 
+![width:950](assets/2023-09-18-19-14-39.png)
+
+-----
+
+# Firmata 
+
+![width:950](assets/2023-09-18-19-02-48.png)
+
+-----
+
+# Led Blink 
+![bg left:30% fit](assets/2023-09-18-19-18-32.png)
+
+```
+  var five = require("johnny-five");
+  var board = new five.Board();
+
+  board.on("ready", function() {
+      var led = new five.Led(13);
+      led.blink(500);
+  });
+```
+
+-----
+
+# PushButton
+
+![bg left](assets/2023-09-19-00-45-16.png)
+ ```
+var five = require("johnny-five");
+var board = new five.Board();
+
+board.on("ready", function() {
+    const led = new five.Led(7);
+    const pushButton = new five.Button(
+        {
+            pin: 8,
+            isPullup : true
+        }
+    );
+    pushButton.on('down', () => {
+
+        if (!led.isOn) {led.on();} else {led.off()}
+    });
+
+});
+ ```                                                    
+----
+
+# Analog Sensors
+
+----
+
+
+# Analog Vs Digital
+
+![](assets/2023-09-19-22-00-17.png)
+
+----
+# Analog Vs Digital
+
+| Aspect                  | Analog                                      | Digital                                  |
+|-------------------------|---------------------------------------------|------------------------------------------|
+| Data Representation     | Continuous waveform                         | Discrete binary values (0s and 1s)       |
+| Accuracy                | High accuracy and precision                | Excellent accuracy within bit resolution |
+| Noise Resistance        | Susceptible to noise and interference      | More robust against noise                |
+| Signal Processing       | Suitable for amplification, filtering, etc. | Versatile for complex algorithms        |
+| Cost and Complexity     | Often simpler and potentially cheaper     | Can be more complex and costly          |
+
+<style scoped>
+  * {
+    font-size: 25px;
+  }
+</style>
+
+----
+
+# LDR (Light Dependent Resistor)
+
+![width:800px](assets/2023-09-19-21-44-30.png)
+
+----
+
+![bg left fit](assets/2023-09-20-10-30-26.png)
+https://johnny-five.io/api/sensor/
+```
+var five = require("johnny-five");
+
+board = new five.Board();
+
+board.on("ready", function() {
+
+    let photoresistor = new five.Sensor({
+        pin: "A0",
+        freq: 500
+    });
+
+    let led = new five.Led(8);
+
+    // board.repl.inject({
+    //     pot: photoresistor
+    // });
+
+    photoresistor.on("data", function() {
+        console.log(this.value);
+        if (this.value >= 1000) {
+            led.on();
+        }else {
+            led.off();
+        }
+    });
+});
+```
+----
+
+##  Equivalent C code
+
+https://wokwi.com/projects/376361780745305089
+
+```
+#define LDR A0
+#define LED 8
+
+void setup() {
+pinMode(8, OUTPUT);
+pinMode(A0, INPUT); 
+
+}
+
+void loop() {
+  if (analogRead(A0) >= 1000) {
+    digitalWrite(LED, HIGH);
+  }else {
+    digitalWrite(LED, LOW);
+  }
+}
+
+```
+----
+# Servo Control
+
+----
+
+# Motors
+ Motor Type | Description | Image |
+|------------|-------------|-------|
+| Stepper    | Converts electrical pulses into precise mechanical steps. Used in 3D printers and CNC machines. |![](assets/2023-09-20-14-07-09.png) |
+| Servo      | Provides accurate angular control, common in robotics. | ![](assets/2023-09-20-14-06-46.png)|
+| DC         | Operates on direct current, simple, and used in various applications. | ![](assets/2023-09-20-14-07-40.png)|
+
+<style scoped>
+  * {
+    font-size: 20px;
+  }
+  img {
+    width:130px;
+  }
+  </style>
+----
+
+# Servo Motor
+![bg left fit](assets/2023-09-20-14-03-51.png)
+```
+const five = require("johnny-five");
+const board = new five.Board();
+
+board.on("ready", () => {
+    const servo = new five.Servo(10);
+
+    board.repl.inject({
+        servo
+      });
+    servo.sweep();
+})
+
+```
+
+----
+
+# Build a project 
+
+## LED Binary Counter
+
+----
+
+# Circuit
+
+https://wokwi.com/projects/376380254565660673
+
+![width:700px](assets/2023-09-20-15-31-16.png)
+
+----
+
+```
+const five = require("johnny-five");
+const board = new five.Board();
+
+
+board.on("ready", () => {
+    let leds = [8,9,10,11,12].map((pinNo) => {
+       return new five.Led(pinNo);
+    });
+
+    for (let i = 0 ; i <= 31; i++) {
+        setTimeout(() => {ledState(i.toString(2).padStart(5,'0') ,leds)},i * 1000);
+    }
+
+
+}) ;
+
+function ledState(ledString,leds) {
+    Array.from("00000").map((val,index) => setLedState(leds[index], parseInt(val)));
+    Array.from(ledString).map((val,index) => setLedState(leds[index], parseInt(val)));
+}
+
+function setLedState(led, state) {
+    state == 1 ? led.on() : led.off();
+}
+```
+----
+
+ # Thankyou
+
+----
