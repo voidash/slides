@@ -331,6 +331,12 @@ figcaption { font-size: .72em; font-weight: 500; color: var(--sub); }
 .thumb[data-bg="amber"]   { background: var(--amber); }
 .thumb[data-bg="dark"]    { background: var(--gray900); color: #fff; }
 .thumb[data-bg="dark"] .n, .thumb[data-bg="blue"] .n { color: var(--gray400); }
+
+/* presentation mode — used when native fullscreen is blocked (sandboxed iframe) */
+body.faux-full .progress { display: none; }
+body.faux-full .hud { opacity: .25; }
+body.faux-full .hud:hover { opacity: 1; }
+body.faux-full .topbar { opacity: .35; }
 </style>
 
 <div class="deck" id="deck">
@@ -1057,20 +1063,46 @@ figcaption { font-size: .72em; font-weight: 500; color: var(--sub); }
     else if (k === 'o' || k === 'O') { gridView.classList.toggle('is-on'); }
     else if (k === 's' || k === 'S') { notesOn = !notesOn; notes.classList.toggle('is-on', notesOn); }
     else if (k === 'Escape') { gridView.classList.remove('is-on'); }
-    else if (k === 'f' || k === 'F') {
-      if (document.fullscreenElement) document.exitFullscreen();
-      else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
-    }
+    else if (k === 'f' || k === 'F') { e.preventDefault(); toggleFull(); }
   });
 
-  function toggleFull() {
-    if (document.fullscreenElement) document.exitFullscreen();
-    else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+  /* Fullscreen.
+     Native FS is unavailable when the deck is embedded in a cross-origin
+     iframe without allow="fullscreen" (e.g. a preview pane). Fall back to a
+     CSS presentation mode so the button always does something visible. */
+  var btnFull = document.getElementById('btnFull');
+  var el = document.documentElement;
+  var req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+  var exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+  function fsEl() { return document.fullscreenElement || document.webkitFullscreenElement || null; }
+
+  function syncFullLabel() {
+    var on = !!fsEl() || document.body.classList.contains('faux-full');
+    btnFull.textContent = on ? 'Exit' : 'Full';
   }
-  document.getElementById('btnFull').addEventListener('click', toggleFull);
-  document.addEventListener('fullscreenchange', function () {
-    document.getElementById('btnFull').textContent = document.fullscreenElement ? 'Exit' : 'Full';
+
+  function toggleFull() {
+    var blocked = !document.fullscreenEnabled || !req;
+    if (blocked) {                       // sandboxed preview — do the next best thing
+      document.body.classList.toggle('faux-full');
+      syncFullLabel();
+      return;
+    }
+    try {
+      if (fsEl()) { exit.call(document); }
+      else { Promise.resolve(req.call(el)).catch(function () {
+        document.body.classList.add('faux-full'); syncFullLabel();
+      }); }
+    } catch (err) {
+      document.body.classList.toggle('faux-full'); syncFullLabel();
+    }
+  }
+
+  btnFull.addEventListener('click', toggleFull);
+  ['fullscreenchange', 'webkitfullscreenchange'].forEach(function (ev) {
+    document.addEventListener(ev, syncFullLabel);
   });
+  syncFullLabel();
 
   document.getElementById('btnGrid').addEventListener('click', function () { gridView.classList.toggle('is-on'); });
   document.getElementById('btnNotes').addEventListener('click', function () {
